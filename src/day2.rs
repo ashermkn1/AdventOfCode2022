@@ -1,121 +1,57 @@
-use std::ops::Deref;
-
-pub enum Action {
-    ROCK = 1,
-    PAPER = 2,
-    SCISSORS = 3,
-}
-pub enum Outcome {
-    WIN = 6,
-    DRAW = 3,
-    LOSE = 0,
-}
-#[aoc_generator(day2, part1)]
-pub fn day2_input(input: &str) -> Vec<(Action, Action)> {
+#[aoc_generator(day2)]
+pub fn day2_input(input: &str) -> Vec<(u32, u32)> {
     input
         .lines()
         .map(|line| {
             let (opp, me) = line.split_once(' ').unwrap();
             (
                 match opp {
-                    "A" => Action::ROCK,
-                    "B" => Action::PAPER,
-                    "C" => Action::SCISSORS,
-                    _ => panic!("unexpected input"),
+                    "A" => 0,
+                    "B" => 1,
+                    "C" => 2,
+                    _ => unreachable!("unexpected input"),
                 },
                 match me {
-                    "X" => Action::ROCK,
-                    "Y" => Action::PAPER,
-                    "Z" => Action::SCISSORS,
-                    _ => panic!("unexpected input"),
-                },
-            )
-        })
-        .collect()
-}
-#[aoc_generator(day2, part2)]
-pub fn day2_input_part2(input: &str) -> Vec<(Action, Outcome)> {
-    input
-        .lines()
-        .map(|line| {
-            let (opp, me) = line.split_once(' ').unwrap();
-            (
-                match opp {
-                    "A" => Action::ROCK,
-                    "B" => Action::PAPER,
-                    "C" => Action::SCISSORS,
-                    _ => panic!("unexpected input"),
-                },
-                match me {
-                    "X" => Outcome::LOSE,
-                    "Y" => Outcome::DRAW,
-                    "Z" => Outcome::WIN,
-                    _ => panic!("unexpected input"),
+                    "X" => 0,
+                    "Y" => 1,
+                    "Z" => 2,
+                    _ => unreachable!("unexpected input"),
                 },
             )
         })
         .collect()
 }
 #[aoc(day2, part1)]
-pub fn part1(input: &[(Action, Action)]) -> u32 {
+pub fn part1(input: &[(u32, u32)]) -> u32 {
     input
         .iter()
-        .map(|(opp, me)| match me {
-            Action::ROCK => {
-                Action::ROCK as u32
-                    + match opp {
-                        Action::ROCK => Outcome::DRAW as u32,
-                        Action::PAPER => Outcome::LOSE as u32,
-                        Action::SCISSORS => Outcome::WIN as u32,
-                    }
+        .map(|(opp, me)| {
+            let score = me + 1;
+            // we tie
+            if me == opp {
+                return score + 3;
+            } else if (opp + 1) % 3 == *me {
+                // we win
+                return score + 6;
             }
-            Action::PAPER => {
-                Action::PAPER as u32
-                    + match opp {
-                        Action::ROCK => Outcome::WIN as u32,
-                        Action::PAPER => Outcome::DRAW as u32,
-                        Action::SCISSORS => Outcome::LOSE as u32,
-                    }
-            }
-            Action::SCISSORS => {
-                Action::SCISSORS as u32
-                    + match opp {
-                        Action::ROCK => Outcome::LOSE as u32,
-                        Action::PAPER => Outcome::WIN as u32,
-                        Action::SCISSORS => Outcome::DRAW as u32,
-                    }
-            }
+            // we lose
+            score
         })
         .sum()
 }
 #[aoc(day2, part2)]
-pub fn part2(input: &[(Action, Outcome)]) -> u32 {
+pub fn part2(input: &[(u32, u32)]) -> u32 {
     input
         .iter()
-        .map(|(opp, me)| match me {
-            Outcome::WIN => {
-                Outcome::WIN as u32
-                    + match opp {
-                        Action::ROCK => Action::PAPER as u32,
-                        Action::PAPER => Action::SCISSORS as u32,
-                        Action::SCISSORS => Action::ROCK as u32,
-                    }
-            }
-            Outcome::DRAW => {
-                Outcome::DRAW as u32
-                    + match opp {
-                        Action::ROCK => Action::ROCK as u32,
-                        Action::PAPER => Action::PAPER as u32,
-                        Action::SCISSORS => Action::SCISSORS as u32,
-                    }
-            }
-            Outcome::LOSE => {
-                Outcome::LOSE as u32
-                    + match opp {
-                        Action::ROCK => Action::SCISSORS as u32,
-                        Action::PAPER => Action::ROCK as u32,
-                        Action::SCISSORS => Action::PAPER as u32,
-                    }
+        .map(|(opp, me)| {
+            match me {
+                // we lose
+                0 => 1 + (opp + 2) % 3,
+                // draw
+                1 => 3 + 1 + opp,
+                // we win
+                2 => 6 + 1 + (opp + 1) % 3,
+                _ => unreachable!("unexpected"),
             }
         })
         .sum()
