@@ -27,7 +27,7 @@ pub fn part2(input: &str) -> u32 {
         .map(|(a, b, c)| {
             common_chars(
                 a,
-                &common_chars(b, c).into_iter().collect::<String>().as_str(),
+                common_chars(b, c).into_iter().collect::<String>().as_str(),
             )
         })
         .map(|c| priority(c[0]))

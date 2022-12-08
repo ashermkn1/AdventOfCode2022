@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use regex::Regex;
 pub struct Input {
     stacks: Vec<Vec<u8>>,
