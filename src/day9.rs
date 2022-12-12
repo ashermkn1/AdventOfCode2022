@@ -1,5 +1,4 @@
 use crate::day9::Direction::*;
-use itertools::Itertools;
 use std::collections::HashSet;
 #[derive(Debug)]
 enum Direction {
