@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
 
 const MAX_ROOMS: usize = 60;

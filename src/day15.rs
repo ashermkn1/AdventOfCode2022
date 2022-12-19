@@ -26,7 +26,7 @@ impl Sensor {
         }
     }
     // where the lines extending from each edge of the manhattan rhombus have x = 0
-    fn intercepts(&self) -> Vec<isize> {
+    fn _intercepts(&self) -> Vec<isize> {
         let range = self.range as isize;
         vec![
             self.x + (self.y + range), // bottom right edge
